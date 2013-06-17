@@ -22,7 +22,7 @@ setup(
     author_email='post@funkbit.no',
     url='https://github.com/funkbit/django-dynamicresponse',
     packages=['dynamicresponse', 'dynamicresponse.middleware'],
-    tests_require=['django>=1.1,<1.4'],
+    tests_require=['django>=1.1'],
     test_suite='examples.myblog.blog.runtests.runtests',
     license='BSD',
     classifiers=(

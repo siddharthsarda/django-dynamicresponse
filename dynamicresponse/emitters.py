@@ -6,7 +6,10 @@ http://bitbucket.org/jespern/django-piston
 from __future__ import generators
 from django.db.models.query import QuerySet
 from django.db.models import Model, permalink
-from django.utils import simplejson
+try:
+   import json
+except:   
+   from django.utils import simplejson as json
 from django.utils.xmlutils import SimplerXMLGenerator
 from django.utils.encoding import smart_unicode
 from django.core.urlresolvers import reverse, NoReverseMatch
@@ -272,5 +275,5 @@ class JSONEmitter(Emitter):
         if settings.DEBUG:
             indent = 4
 
-        seria = simplejson.dumps(self.construct(), cls=DateTimeAwareJSONEncoder, ensure_ascii=False, indent=indent)
+        seria = json.dumps(self.construct(), cls=DateTimeAwareJSONEncoder, ensure_ascii=False, indent=indent)
         return seria

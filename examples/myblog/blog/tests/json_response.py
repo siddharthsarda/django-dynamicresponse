@@ -3,7 +3,10 @@ import unittest
 
 from django.db import models
 from django.http import HttpResponse
-from django.utils import simplejson
+try:
+   import json
+except ImportError:
+   from django.utils import simplejson as json
 
 from dynamicresponse.json_response import JsonResponse
 
@@ -53,21 +56,21 @@ class JsonResponseTest(unittest.TestCase):
         self.assertEqual(self.modelWithoutSerializeFields['Content-Type'], 'application/json; charset=utf-8')
 
     def testDictContentConvertsToJson(self):
-        result = simplejson.loads(self.jsonres.content)
+        result = json.loads(self.jsonres.content)
 
         for key, value in result.items():
             self.assertEqual(self.testObj.get(key).__str__(), value.__str__())
 
     def testModelWithSerializeFieldsConvertsToJson(self):
         to_equal = { u'id': None, u'title': u'Hadouken' }
-        result = simplejson.loads(self.modelWithSerializeFields.content)
+        result = json.loads(self.modelWithSerializeFields.content)
 
         for key, value in result.items():
             self.assertEqual(to_equal.get(key).__str__(), value.__str__())
 
     def testModelWithoutSerializeFieldsConvertsToJson(self):
         to_equal = { u'text': u'is said repeatedly in Street Fighter', u'title': u'Hadouken', u'id': None }
-        result = simplejson.loads(self.modelWithoutSerializeFields.content)
+        result = json.loads(self.modelWithoutSerializeFields.content)
 
         for key, value in result.items():
             self.assertEqual(to_equal.get(key).__str__(), value.__str__())
@@ -77,7 +80,7 @@ class JsonResponseTest(unittest.TestCase):
 
         self.modelbaseWithoutSerializeFields.dummy = "blah"
         self.modelbaseWithoutSerializeFields._dummy = "blah"
-        result = simplejson.loads(JsonResponse(self.modelbaseWithoutSerializeFields).content)
+        result = json.loads(JsonResponse(self.modelbaseWithoutSerializeFields).content)
 
         for key, value in result.items():
             self.assertEqual(to_equal.get(key).__str__(), value.__str__())

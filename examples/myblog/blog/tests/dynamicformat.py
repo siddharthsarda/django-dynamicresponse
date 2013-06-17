@@ -13,7 +13,7 @@ class DynamicFormatTest(unittest.TestCase):
     def setUp(self):
         self.dynamicformat = DynamicFormatMiddleware()
         self.request = HttpRequest()
-        self.request._raw_post_data = dumps({
+        self.request._body = dumps({
             "testint": 5,
             "teststring": "allihopa",
             "testobj": {
@@ -26,7 +26,7 @@ class DynamicFormatTest(unittest.TestCase):
 
 
     def testFlattenDict(self):
-        self.assertTrue(isinstance(self.dynamicformat._flatten_dict(loads(self.request._raw_post_data)), QueryDict))
+        self.assertTrue(isinstance(self.dynamicformat._flatten_dict(loads(self.request._body)), QueryDict))
 
     def testProcessRequestFlattensPost(self):
         self.dynamicformat._flatten_dict = Mock()
@@ -34,7 +34,7 @@ class DynamicFormatTest(unittest.TestCase):
         self.request.META['CONTENT_LENGTH'] = 1
 
         self.dynamicformat.process_request(self.request)
-        self.dynamicformat._flatten_dict.assert_called_once_with(loads(self.request._raw_post_data))
+        self.dynamicformat._flatten_dict.assert_called_once_with(loads(self.request._body))
 
     def testProcessRequestDoesNotFlattenPostIfContentLengthIs0(self):
         self.dynamicformat._flatten_dict = Mock()
